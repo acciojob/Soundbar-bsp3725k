@@ -1,38 +1,35 @@
-//your JS code here. If required.
-// Define the sound files
-const sounds = [
-  "applause",
-  "boo",
-  "gasp",
-  "tada",
-  "victory",
-  "wrong"
-];
+const sounds = ["sound1", "sound2", "sound3"]; // Add sound file names (without extensions)
 
-// Create an audio map
-const audioMap = {};
-sounds.forEach(sound => {
-  audioMap[sound] = new Audio(`./sounds/${sound}.mp3`);
+const buttonsContainer = document.getElementById("buttons");
+
+// Create buttons for each sound
+sounds.forEach((sound) => {
+  const button = document.createElement("button");
+  button.classList.add("btn");
+  button.textContent = sound;
+
+  button.addEventListener("click", () => {
+    stopSounds(); // Stop other sounds before playing
+    const audio = document.getElementById(sound);
+    audio.play();
+  });
+
+  buttonsContainer.appendChild(button);
+
+  // Add audio elements to the document
+  const audio = document.createElement("audio");
+  audio.id = sound;
+  audio.src = `./sounds/${sound}.mp3`;
+  document.body.appendChild(audio);
 });
 
-// Function to stop all sounds
-function stopAllSounds() {
-  Object.values(audioMap).forEach(audio => {
+// Stop button functionality
+document.querySelector(".stop").addEventListener("click", stopSounds);
+
+function stopSounds() {
+  sounds.forEach((sound) => {
+    const audio = document.getElementById(sound);
     audio.pause();
-    audio.currentTime = 0;
+    audio.currentTime = 0; // Reset playback position
   });
 }
-
-// Add event listeners to all buttons
-document.querySelectorAll(".btn").forEach(button => {
-  const sound = button.getAttribute("data-sound");
-
-  if (sound) {
-    button.addEventListener("click", () => {
-      stopAllSounds();
-      audioMap[sound].play();
-    });
-  } else if (button.classList.contains("stop")) {
-    button.addEventListener("click", stopAllSounds);
-  }
-});
